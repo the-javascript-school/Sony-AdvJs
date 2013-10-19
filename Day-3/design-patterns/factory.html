@@ -41,33 +41,7 @@
 			o.url = 'http://google.com';
 			o.insert(document.body);
 
-			var taskManager = {};
-
-			taskManager.update = function () {
-				console.log('update');
-			}
-
-			taskManager.read = function () {
-				console.log('read');
-			}
-
-			var type = 'update';
-			var task;
-
-			if (type === 'update') {
-				task = new taskManager.update();
-			}
-
-			if (type === 'read') {
-				task = new taskManager.read();
-			}
-
-			taskManager.factory = function (typeType) {
-				return new taskManager[typeType];
-			}
-
-			task = new taskManager[type];
-
+			
 			/*** Built-in Object Factory ***/
 			var o = new Object(),
 					n = new Object(1),
