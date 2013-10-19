@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="jquery-1.10.2.js"></script>
+	<script>
+		function getNewCalculator(){
+			var _basic=0,
+				_hra =0,
+				_da =0,
+				_tax=0,
+				_salary =0,
+				_changeSubcribers = {};
+
+			var basic = function(){
+				if (arguments.length == 0) return _basic;
+				_basic = arguments[0];
+				triggerModelChange('basic');
+			};
+			var hra = function(){
+				if (arguments.length == 0) return _hra;
+				_hra = arguments[0];
+				triggerModelChange('hra');
+			};
+			var da = function(){
+				if (arguments.length == 0) return _da;
+				_da = arguments[0];
+				triggerModelChange('da');
+			};
+			var tax = function(){
+				if (arguments.length == 0) return _tax;
+				_tax = arguments[0];
+				triggerModelChange('tax');
+			};
+			var salary = function(){
+				return _salary;
+			};
+			var calculate = function(){
+				_salary = (this.basic() + this.hra() + this.da() ) * ((100 - this.tax())/100);
+				triggerModelChange('salary');
+			}
+			var onModelChange = function(attrName,callback){
+				if (!_changeSubcribers[attrName]) _changeSubcribers[attrName] = [];
+				_changeSubcribers[attrName].push(callback);
+			}
+			function triggerModelChange(attrName){
+				if (!!_changeSubcribers[attrName]){
+					for(var i=0;i<_changeSubcribers[attrName].length;i++){
+						setTimeout((function(index){
+							return function(){
+								_changeSubcribers[attrName][index]();		
+							}
+						}(i)));
+						
+					}
+				}
+			}
+			return {
+				basic : basic,
+				hra : hra,
+				da : da,
+				tax : tax,
+				calculate : calculate,
+				onModelChange : onModelChange
+			};
+			
+		}
+
+	</script>
+</head>
+<body>
+	<input type="button" value="Test" id="btnTest">
+</body>
+</html>

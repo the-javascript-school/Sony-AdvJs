@@ -46,21 +46,31 @@
 		function triggerModelChange(attrName){
 			
 			//The following is buggy version
-			for(var i=0;i<_changeSubcribers[attrName].length;i++){
+			/*for(var i=0;i<_changeSubcribers[attrName].length;i++){
 				setTimeout(function(){
 					_changeSubcribers[attrName][i]();
 				});
-			}
+			}*/
 
 			//The following is the non buggy version
-			/*for(var i=0;i<_changeSubcribers[attrName].length;i++){
+			for(var i=0;i<_changeSubcribers[attrName].length;i++){
 				setTimeout((function(index){
 					return function(){
 						_changeSubcribers[attrName][index]();		
 					}
 				}(i)));
 				
+			}
+			/*var print = function(index){
+			_changeSubcribers[attrName][index]();
+			};
+
+			for(var i=0;i<_changeSubcribers[attrName].length;i++){
+				setTimeout(print(i),3000);
 			}*/
+
+
+
 		}
 		
 	}
@@ -133,6 +143,22 @@
 		}
 	}());
 
+var instanceCtor = function(){
+      var subscribers = {};
+      this.subscribe = function(eventName, callback){
+         if (!subscribers[eventName]) subscribers[eventName] = [];
+         subscribers[eventName].push(callback);
+      };
+      this.publish = function(eventName){
+         for(var i=0;i<subscribers.length;i++){
+             setTimeout((function(index,eventName){
+                          return function(){
+                            _subscribers[eventName][index]();   
+                          };
+                        }(i,eventName)));
+         }
+      };
+  }
 	</script>
 </head>
 <body>

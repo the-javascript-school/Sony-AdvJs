@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PUB SUB</title>
+  <script>
+    var myBus = (function(){
+      var instanceCtor = function(){
+          var subscribers = {};
+          this.subscribe = function(eventName, callback){
+             if (!subscribers[eventName]) subscribers[eventName] = [];
+             subscribers[eventName].push(callback);
+          };
+          this.publish = function(eventName){
+             for(var i=0;i<subscribers[eventName].length;i++){
+                 setTimeout((function(index,eventName){
+                              return function(){
+                                subscribers[eventName][index]();   
+                              };
+                            }(i,eventName)));
+             }
+          };
+          this.subscribers = subscribers;
+      }
+
+      var instance = new instanceCtor();
+      return {
+        getInstance : function(){
+          return instance;
+        }
+      };
+      
+    })();
+
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
+
